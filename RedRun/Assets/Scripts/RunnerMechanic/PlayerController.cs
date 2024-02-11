@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
     public TextMeshProUGUI ScoreText;
     private int score = 0;
+    public Transform respawnPoint;
 
     public int Score
     {
@@ -56,7 +58,14 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Destroy(gameObject);
+            // Move the player to the respawn point
+            transform.position = respawnPoint.position;
+
+            // Destroy all obstacles and coins
+            DestroyAllObstaclesAndCoins();
+
+            // Update the score display
+            ScoreText.text = score.ToString();
         }
     }
 
@@ -70,4 +79,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Method to destroy all obstacles and coins
+    private void DestroyAllObstaclesAndCoins()
+    {
+        // Destroy all objects with the "Obstacle" tag
+        GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+        foreach (GameObject obstacle in obstacles)
+        {
+            Destroy(obstacle);
+        }
+
+        // Destroy all objects with the "Coin" tag
+        GameObject[] coins = GameObject.FindGameObjectsWithTag("Coin");
+        foreach (GameObject coin in coins)
+        {
+            Destroy(coin);
+        }
+    }
 }
