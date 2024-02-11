@@ -1,63 +1,96 @@
+using System.Collections;
 using UnityEngine;
 
 public class ObstacleGenerator : MonoBehaviour
 {
-    public GameObject[] obstaclePrefabs; // Массив префабов препятствий
-    public Transform generationPoint; // Точка, где будут создаваться препятствия
-    public float minTimeBetweenObstacles; // Минимальный интервал времени между созданием препятствий
-    public float maxTimeBetweenObstacles; // Максимальный интервал времени между созданием препятствий
-    public float obstacleSpeed; // Скорость движения препятствий влево
-    public Canvas canvas; // Ссылка на Canvas, куда будут добавляться препятствия
+    public GameObject[] obstaclePrefabs1; // Array of obstacle prefabs for the first point
+    public GameObject[] obstaclePrefabs2; // Array of obstacle prefabs for the second point
+    public GameObject[] obstaclePrefabs3; // Array of obstacle prefabs for the third point
+    public GameObject coinPrefab; // Coin prefab
+
+    public Transform generationPoint1; // First point where obstacles will be generated
+    public Transform generationPoint2; // Second point where obstacles will be generated
+    public Transform generationPoint3; // Third point where obstacles will be generated
+    public Transform generationPoint4; // Fourth point where coins will be generated
+    public Transform generationPoint5; // Fifth point where coins will be generated
+
+    public float minTimeBetweenObstacles; // Minimum time interval between obstacle creation
+    public float maxTimeBetweenObstacles; // Maximum time interval between obstacle creation
+
+    public float obstacleSpeed; // Speed of the obstacles
+    public Canvas canvas;
+
+    private Transform selectedGenerationPoint; // Reference to the selected generation point
+    private GameObject lastObstacle; // Reference to the last created obstacle
 
     void Start()
     {
-        // Создаем первое препятствие
-        CreateObstacle();
+        StartCoroutine(GenerateObstacles());
     }
 
-    void Update()
+    IEnumerator GenerateObstacles()
     {
-        // Проверка, нужно ли создать новое препятствие
-        if (Time.time >= nextObstacleTime)
+        while (true)
         {
             CreateObstacle();
-        }
 
-        // Перемещаем существующие препятствия влево и уничтожаем их, если они больше не видны на экране
-        MoveAndDestroyObstacles();
+            CreateCoin();
+
+            yield return new WaitForSeconds(Random.Range(minTimeBetweenObstacles, maxTimeBetweenObstacles));
+        }
     }
 
-    // Время следующего создания препятствия
-    private float nextObstacleTime;
-
-    // Создание препятствия
     void CreateObstacle()
     {
-        // Выбираем случайное время для следующего создания препятствия
-        nextObstacleTime = Time.time + Random.Range(minTimeBetweenObstacles, maxTimeBetweenObstacles);
+        float randomNumber = Random.value;
+        GameObject[] selectedObstaclePrefabs;
+        GameObject obstacleToInstantiate;
 
-        // Выбираем случайный индекс из массива префабов препятствий
-        int randomIndex = Random.Range(0, obstaclePrefabs.Length);
-        // Создаем препятствие в пространстве Canvas
-        GameObject obstacle = Instantiate(obstaclePrefabs[randomIndex], generationPoint.position, Quaternion.identity, canvas.transform);
+        do
+        {
+            if (randomNumber < 0.2f)
+            {
+                selectedGenerationPoint = generationPoint1;
+                selectedObstaclePrefabs = obstaclePrefabs1;
+            }
+            else if (randomNumber < 0.4f)
+            {
+                selectedGenerationPoint = generationPoint2;
+                selectedObstaclePrefabs = obstaclePrefabs2;
+            }
+            else
+            {
+                selectedGenerationPoint = generationPoint3;
+                selectedObstaclePrefabs = obstaclePrefabs3;
+            }
+
+            int randomIndex = Random.Range(0, selectedObstaclePrefabs.Length);
+            obstacleToInstantiate = selectedObstaclePrefabs[randomIndex];
+        } while (obstacleToInstantiate == lastObstacle);
+
+        lastObstacle = obstacleToInstantiate;
+
+        GameObject obstacle = Instantiate(obstacleToInstantiate, selectedGenerationPoint.position, Quaternion.identity, canvas.transform);
+        obstacle.GetComponent<Rigidbody2D>().velocity = Vector2.left * obstacleSpeed;
+
+        Destroy(obstacle, 5f);
     }
 
-    // Перемещение существующих препятствий влево и уничтожение их, если они больше не видны на экране
-    void MoveAndDestroyObstacles()
+    // Создание монеты
+    void CreateCoin()
     {
-        // Получаем все препятствия в пространстве Canvas
-        GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
-
-        // Двигаем каждое препятствие влево
-        foreach (GameObject obstacle in obstacles)
+        if (selectedGenerationPoint == generationPoint1)
         {
-            obstacle.transform.Translate(Vector3.left * obstacleSpeed * Time.deltaTime);
-
-            // Уничтожаем препятствие, если оно больше не видно на экране
-            if (obstacle.transform.position.x < Camera.main.ViewportToWorldPoint(Vector3.zero).x)
-            {
-                Destroy(obstacle);
-            }
+            GameObject coin = Instantiate(coinPrefab, generationPoint4.position, Quaternion.identity, canvas.transform);
+            coin.GetComponent<Rigidbody2D>().velocity = Vector2.left * obstacleSpeed;
+            
+            Destroy(coin, 5f);
+        }
+        else if (selectedGenerationPoint == generationPoint2)
+        {
+            GameObject coin = Instantiate(coinPrefab, generationPoint5.position, Quaternion.identity, canvas.transform);
+            coin.GetComponent<Rigidbody2D>().velocity = Vector2.left * obstacleSpeed;
+            Destroy(coin, 5f);
         }
     }
 }
