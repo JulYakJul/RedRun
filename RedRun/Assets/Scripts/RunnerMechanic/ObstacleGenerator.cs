@@ -76,7 +76,6 @@ public class ObstacleGenerator : MonoBehaviour
         Destroy(obstacle, 5f);
     }
 
-    // Создание монеты
     void CreateCoin()
     {
         if (selectedGenerationPoint == generationPoint1)
