@@ -674,7 +674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &725121088
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5874,9 +5874,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpForce: 6
+  sliderIncreaseRate: 0.05
   ScoreText: {fileID: 808089540}
   respawnPoint: {fileID: 1649714188}
-  SpawnPoint: {fileID: 1649714189}
+  slider: {fileID: 1696006433}
 --- !u!50 &1161961761
 Rigidbody2D:
   serializedVersion: 4
@@ -6273,7 +6274,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1327609893}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -16303,10 +16304,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 436f969a8b6cf4b4c9cfdbf5bf3da280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 5955340148790425223, guid: 079a110d1f883064ba6583f42aeeee90, type: 3}
-  playerScale: 30
-  canvas: {fileID: 1734389910}
-  respawnPoint: {fileID: 1649714188}
 --- !u!1 &1696006431
 GameObject:
   m_ObjectHideFlags: 0
@@ -17153,7 +17150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
